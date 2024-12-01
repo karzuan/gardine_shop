@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>TEST Gargine Gallery shop - main</title>
+{% endblock %}
+
+
+{% block body %}
+<main>
+   <h2>Добавить новый товар:</h2>
+    <form action="/add_product" method="post">
+        <label for="exampleInputEmail1" class="form-label">Product name</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" name="name">
+        <label for="exampleFormControlTextarea1" class="form-label">Описание товара</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="description"></textarea>
+        <label for="price" class="form-label">Price</label>
+        <input type="text" class="form-control" id="price" name="price" value="0">
+        <label for="discount" class="form-label">Discount</label>
+        <input type="text" class="form-control" id="discount" value="0" name="discount">
+        <label for="brand" class="form-label">Brand</label>
+        <select class="form-select" id="brand" name="brand_id">
+            {% for brand in brands %}
+                <option value="{{brand['id']}}">{{brand['name']}}</option>
+            {% endfor %}
+        </select>
+        <label for="category" class="form-label">Category</label>
+        <select class="form-select" id="category" name="category_id">
+            {% for category in categories %}
+                <option value="{{category['id']}}">{{category['name']}}</option>
+            {% endfor %}
+        </select>
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" id="status" name="status_id">
+            {% for stat in status %}
+                <option value="{{stat['id']}}">{{stat['name']}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+  </main>
+{% endblock %}
