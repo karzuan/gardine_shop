@@ -1,38 +1,54 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title>TEST Gargine Gallery shop - add</title>
+    <title>TEST Gargine Gallery shop - edit</title>
 {% endblock %}
 
+{% set brand_id = item['brand'] %}
+{% set cat_id = item['category_id'] %}
+{% set status_id = item['status_id'] %}
 
 {% block body %}
 <main>
-   <h2>Добавить новый товар:</h2>
-    <form action="/add_product" method="post">
+   <h2>Изменить {{item['name']}}</h2>
+    <form action="/edit_product" method="post">
+        <input type="hidden" name="id" value="{{item['id']}}">
         <label for="exampleInputEmail1" class="form-label">Product name</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" name="name">
+        <input type="text" class="form-control" id="exampleInputEmail1" name="name" value="{{item['name']}}">
         <label for="exampleFormControlTextarea1" class="form-label">Описание товара</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="description"></textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="description">{{item['description']}}</textarea>
         <label for="price" class="form-label">Price</label>
-        <input type="text" class="form-control" id="price" name="price" value="0">
+        <input type="text" class="form-control" id="price" name="price" value="{{item['price']}}">
         <label for="discount" class="form-label">Discount</label>
-        <input type="text" class="form-control" id="discount" value="0" name="discount">
+        <input type="text" class="form-control" id="discount" value="{{item['discount']}}" name="discount">
         <label for="brand" class="form-label">Brand</label>
         <select class="form-select" id="brand" name="brand_id">
             {% for brand in brands %}
+                {% if brand['id'] == brand_id %}
+                <option value="{{brand['id']}}" selected>{{brand['name']}}</option>
+                {% else %}
                 <option value="{{brand['id']}}">{{brand['name']}}</option>
+                {% endif %}
             {% endfor %}
         </select>
         <label for="category" class="form-label">Category</label>
         <select class="form-select" id="category" name="category_id">
             {% for category in categories %}
+                {% if category['id'] == cat_id %}
+                <option value="{{category['id']}}" selected>{{category['name']}}</option>
+                {% else %}
                 <option value="{{category['id']}}">{{category['name']}}</option>
+                {% endif %}
             {% endfor %}
         </select>
         <label for="status" class="form-label">Status</label>
         <select class="form-select" id="status" name="status_id">
             {% for stat in status %}
+            {% if stat['id'] == status_id %}
+                <option value="{{stat['id']}}" selected>{{stat['name']}}</option>
+            {% else %}
                 <option value="{{stat['id']}}">{{stat['name']}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <br>

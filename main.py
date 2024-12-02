@@ -153,6 +153,51 @@ def add_product():
 def add():
     return render_template('add.html', brands=brands, status=status, categories=categories)
 
+@app.route('/edit_product', methods=['POST'])
+def edit_product():
+    id = request.form['id']
+    name = request.form['name']
+    description = request.form['description']
+    price = request.form['price']
+    discount = request.form['discount']
+    brand = request.form['brand_id']
+    status = request.form['status_id']
+    category = request.form['category_id']
+    conn = psycopg2.connect(
+        host="localhost",
+        database="gardine_db",
+        user="postgres",
+        password="07072021"
+    )
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute("UPDATE products SET name=%s, description=%s, price=%s, discount=%s, brand=%s, status_id=%s, category_id=%s WHERE id=%s", (name, description, price, discount, brand, status, category, id))
+    conn.commit()
+    cur.close()
+    conn.close()
+    ##return redirect(url_for('index'))
+    return redirect(url_for('product', id=id))
+
+@app.route('/edit/<int:id>')
+def edit(id):
+    conn = psycopg2.connect(
+        host="localhost",
+        database="gardine_db",
+        user="postgres",
+        password="07072021"
+    )
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute("SELECT * FROM products WHERE id=%s", (id,))
+    item = cur.fetchone()
+    cur.execute("Select * from brands")
+    brands = cur.fetchall()
+    cur.execute("Select * from status")
+    status = cur.fetchall()
+    cur.execute("Select * from categories")
+    categories = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('edit.html', item=item, brands=brands, status=status, categories=categories)
+
 # @app.route('/update_product', methods=['POST'])
 # def update_product():
 #     id = request.form['id']
