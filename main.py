@@ -135,6 +135,13 @@ def add_product():
     brand = request.form['brand_id']
     status = request.form['status_id']
     category = request.form['category_id']
+    conn = psycopg2.connect(
+        host="localhost",
+        database="gardine_db",
+        user="postgres",
+        password="07072021"
+    )
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute("INSERT INTO products (name, description, price, discount, brand, status_id, category_id) VALUES (%s, %s, %s, %s, %s, %s, %s)", (name, description, price, discount, brand, status, category))
     conn.commit()
     cur.close()
