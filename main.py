@@ -24,6 +24,10 @@ app = Flask(__name__)
 # def index():
 #     return render_template('index.html', items=items, brands=brands, status=status, categories=categories)
 @app.route('/')
+def landing():
+    return render_template('landing.html')
+
+@app.route('/tables')
 def index():
     conn = psycopg2.connect(
         host="localhost",
@@ -197,22 +201,6 @@ def edit(id):
     cur.close()
     conn.close()
     return render_template('edit.html', item=item, brands=brands, status=status, categories=categories)
-
-# @app.route('/update_product', methods=['POST'])
-# def update_product():
-#     id = request.form['id']
-#     name = request.form['name']
-#     description = request.form['description']
-#     price = request.form['price']
-#     discount = request.form['discount']
-#     brand = request.form['brand_id']
-#     status = request.form['status_id']
-#     category = request.form['category_id']
-#     cur.execute("UPDATE products SET name=%s, description=%s, price=%s, discount=%s, brand=%s, status_id=%s, category_id=%s WHERE id=%s", (name, description, price, discount, brand, status, category, id))
-#     conn.commit()
-#     cur.close()
-#     conn.close()
-#     return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
