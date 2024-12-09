@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, Response
 import psycopg2
 import psycopg2.extras
+import csv
 
 conn = psycopg2.connect(
         host="localhost",
@@ -9,6 +10,10 @@ conn = psycopg2.connect(
         password="07072021"
 )
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+cur.execute("Select * from products")
+items = cur.fetchall()
+cur.execute("Select id, name, description, status_id, price, discount from products")
+products_export = cur.fetchall()
 cur.execute("Select * from brands")
 brands = cur.fetchall()
 cur.execute("Select * from status")
@@ -16,19 +21,22 @@ status = cur.fetchall()
 cur.execute("Select * from categories")
 categories = cur.fetchall()
 
-#print(items)
+def get_to_csv(data):
+    with open ('products.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["id", "name", "description", "status", "price", "discount"])
+        for row in data:
+            writer.writerow(row)
+
 
 app = Flask(__name__)
 
-# @app.route('/')
-# def index():
-#     return render_template('index.html', items=items, brands=brands, status=status, categories=categories)
 @app.route('/')
 def landing():
     return render_template('landing.html')
 
 @app.route('/tables')
-def index():
+def tables():
     conn = psycopg2.connect(
         host="localhost",
         database="gardine_db",
@@ -65,7 +73,7 @@ def index():
     categories = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template('index.html', items=items, brands=brands, status=status, categories=categories)
+    return render_template('tables.html', items=items, brands=brands, status=status, categories=categories)
 
 @app.route('/about')
 def about():
@@ -157,7 +165,7 @@ def add_product():
 def add():
     return render_template('add.html', brands=brands, status=status, categories=categories)
 
-@app.route('/edit_product', methods=['POST'])
+@app.route('/update_product', methods=['POST'])
 def edit_product():
     id = request.form['id']
     name = request.form['name']
@@ -201,6 +209,12 @@ def edit(id):
     cur.close()
     conn.close()
     return render_template('edit.html', item=item, brands=brands, status=status, categories=categories)
+
+@app.route('/export-csv')
+def export_csv():
+    get_to_csv(products_export)
+    return Response(open('products.csv', 'r'), mimetype='text/csv', headers={'Content-Disposition': 'attachment; filename=products.csv'})
+
 
 
 if __name__ == "__main__":

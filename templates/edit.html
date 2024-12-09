@@ -11,7 +11,7 @@
 {% block body %}
 <main>
    <h2>Изменить {{item['name']}}</h2>
-    <form action="/edit_product" method="post">
+    <form action="/update_product" method="post">
         <input type="hidden" name="id" value="{{item['id']}}">
         <label for="exampleInputEmail1" class="form-label">Product name</label>
         <input type="text" class="form-control" id="exampleInputEmail1" name="name" value="{{item['name']}}">
