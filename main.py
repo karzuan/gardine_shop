@@ -22,7 +22,7 @@ cur.execute("Select * from categories")
 categories = cur.fetchall()
 
 def get_to_csv(data):
-    with open ('products.csv', 'w', newline='') as file:
+    with open ('products.csv', 'w', newline='',  encoding='utf-8-sig') as file:
         writer = csv.writer(file)
         writer.writerow(["id", "name", "description", "status", "price", "discount"])
         for row in data:
@@ -159,7 +159,7 @@ def add_product():
     cur.close()
     conn.close()
     ## toDo: make redirect to just created single product page
-    return redirect(url_for('index'))
+    return redirect(url_for('products'))
 
 @app.route('/add')
 def add():
@@ -186,7 +186,7 @@ def edit_product():
     conn.commit()
     cur.close()
     conn.close()
-    ##return redirect(url_for('index'))
+    ##return redirect(url_for('tables'))
     return redirect(url_for('product', id=id))
 
 @app.route('/edit/<int:id>')
