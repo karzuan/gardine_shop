@@ -12,8 +12,6 @@ conn = psycopg2.connect(
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 cur.execute("Select * from products")
 items = cur.fetchall()
-cur.execute("Select id, name, description, status_id, price, discount from products")
-products_export = cur.fetchall()
 cur.execute("Select * from brands")
 brands = cur.fetchall()
 cur.execute("Select * from status")
@@ -212,6 +210,15 @@ def edit(id):
 
 @app.route('/export-csv')
 def export_csv():
+    conn = psycopg2.connect(
+        host="localhost",
+        database="gardine_db",
+        user="postgres",
+        password="07072021"
+    )
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute("Select id, name, description, status_id, price, discount from products")
+    products_export = cur.fetchall()
     get_to_csv(products_export)
     return Response(open('products.csv', 'r'), mimetype='text/csv', headers={'Content-Disposition': 'attachment; filename=products.csv'})
 
